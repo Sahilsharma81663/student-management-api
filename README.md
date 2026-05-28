@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Student Management System 🎓
 
 A responsive full-stack web application featuring a robust **FastAPI backend API** paired with a sleek **Tailwind CSS frontend dashboard**. This system tracks student records, manages profile updates, applies validations, and dynamically searches data records.
@@ -29,3 +30,6 @@ student-management-api/
 ├── main.py          # FastAPI application server & routes
 ├── index.html       # Single-page Tailwind CSS dashboard
 └── README.md        # Documentation
+=======
+
+>>>>>>> 0e0f861e9d903f75783cf6152db0c28fc49b6f30
