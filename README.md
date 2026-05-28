@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Student Management System 🎓
 
 A responsive full-stack web application featuring a robust **FastAPI backend API** paired with a sleek **Tailwind CSS frontend dashboard**. This system tracks student records, manages profile updates, applies validations, and dynamically searches data records.
