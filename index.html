@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans minimal-scrollbar">
+
+    <div class="container mx-auto p-6 max-w-6xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-800">Student Management System</h1>
+            <p class="text-gray-600 mt-2">Manage profiles, track courses, and search records seamlessly.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-md h-fit">
+                <h2 id="form-title" class="text-xl font-semibold mb-4 text-gray-700">Add New Student</h2>
+                <form id="student-form" class="space-y-4">
+                    <input type="hidden" id="is-edit" value="false">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Student ID</label>
+                        <input type="number" id="student_id" required
+                            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Full Name</label>
+                        <input type="text" id="student_name" required
+                            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Age</label>
+                            <input type="number" id="student_age" required
+                                class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Marks (0-100)</label>
+                            <input type="number" step="0.1" id="marks" required
+                                class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Course</label>
+                        <input type="text" id="course" required
+                            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Contact (10 digits)</label>
+                        <input type="text" id="contact" required pattern="^[0-9]{10}$"
+                            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">City (Optional)</label>
+                        <input type="text" id="city"
+                            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+
+                    <div class="flex space-x-2 pt-2">
+                        <button type="submit" id="submit-btn"
+                            class="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition">Save
+                            Student</button>
+                        <button type="button" id="cancel-btn"
+                            class="hidden w-1/3 bg-gray-300 text-gray-700 py-2 rounded font-semibold hover:bg-gray-400 transition">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:grid-cols-1 lg:col-span-2 space-y-6">
+                <div class="bg-white p-4 rounded-lg shadow-md flex flex-wrap gap-4 items-end">
+                    <div class="flex-1 min-w-[150px]">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase">Filter Course</label>
+                        <input type="text" id="search-course" placeholder="e.g. Math"
+                            class="w-full mt-1 p-2 border rounded text-sm outline-none">
+                    </div>
+                    <div class="flex-1 min-w-[150px]">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase">Filter City</label>
+                        <input type="text" id="search-city" placeholder="e.g. New York"
+                            class="w-full mt-1 p-2 border rounded text-sm outline-none">
+                    </div>
+                    <button id="search-btn"
+                        class="bg-indigo-600 text-white px-5 py-2 rounded text-sm font-semibold hover:bg-indigo-700 transition">Filter</button>
+                    <button id="reset-search-btn"
+                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-300 transition">Clear</button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-700">Student Directory</h2>
+                        <span id="student-count"
+                            class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full">Total: 0</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 text-xs uppercase font-semibold border-b">
+                                    <th class="p-4">ID</th>
+                                    <th class="p-4">Name</th>
+                                    <th class="p-4">Age/Marks</th>
+                                    <th class="p-4">Course</th>
+                                    <th class="p-4">Location & Contact</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-table-body" class="text-sm text-gray-700 divide-y">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // DOM elements
+        const studentForm = document.getElementById('student-form');
+        const studentTableBody = document.getElementById('student-table-body');
+        const studentCount = document.getElementById('student-count');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const isEditField = document.getElementById('is-edit');
+        const idField = document.getElementById('student_id');
+
+        // Load students on start
+        document.addEventListener('DOMContentLoaded', fetchStudents);
+
+        // Fetch and render all students
+        async function fetchStudents() {
+            try {
+                const response = await fetch(`${API_URL}/students`);
+                const data = await response.json();
+                renderTable(data.student);
+                studentCount.textContent = `Total: ${data.total_students}`;
+            } catch (error) {
+                alert("Failed to connect to the backend server. Make sure it's running!");
+            }
+        }
+
+        // Render rows into table
+        function renderTable(studentsList) {
+            studentTableBody.innerHTML = '';
+            if (!studentsList || studentsList.length === 0) {
+                studentTableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400">No student records found.</td></tr>`;
+                return;
+            }
+
+            studentsList.forEach(student => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-gray-50 transition";
+                row.innerHTML = `
+                    <td class="p-4 font-bold text-gray-600">${student.student_id}</td>
+                    <td class="p-4 font-medium">${student.student_name}</td>
+                    <td class="p-4">
+                        <div class="text-xs text-gray-500">Age: ${student.student_age}</div>
+                        <div class="font-semibold text-green-600">${student.marks}%</div>
+                    </td>
+                    <td class="p-4"><span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">${student.course}</span></td>
+                    <td class="p-4 text-xs">
+                        <div>📞 ${student.contact}</div>
+                        <div class="text-gray-500">📍 ${student.city || 'N/A'}</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="editStudent(${JSON.stringify(student).replace(/"/g, '&quot;')})" class="text-blue-600 hover:text-blue-900 font-medium text-xs border border-blue-600 rounded px-2 py-1">Edit</button>
+                            <button onclick="deleteStudent(${student.student_id})" class="text-red-600 hover:text-red-900 font-medium text-xs border border-red-600 rounded px-2 py-1">Delete</button>
+                        </div>
+                    </td>
+                `;
+                studentTableBody.appendChild(row);
+            });
+        }
+
+        // Create or Update form submission
+        studentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                student_id: parseInt(idField.value),
+                student_name: document.getElementById('student_name').value,
+                student_age: parseInt(document.getElementById('student_age').value),
+                course: document.getElementById('course').value,
+                marks: parseFloat(document.getElementById('marks').value),
+                contact: document.getElementById('contact').value,
+                city: document.getElementById('city').value || null
+            };
+
+            const isEdit = isEditField.value === 'true';
+            const endpoint = isEdit ? `${API_URL}/students/${payload.student_id}` : `${API_URL}/students`;
+            const method = isEdit ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const resData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(resData.detail || "Something went wrong");
+                }
+
+                alert(resData.message);
+                resetForm();
+                fetchStudents();
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        });
+
+        // Delete a student
+        async function deleteStudent(id) {
+            if (!confirm(`Are you sure you want to remove student ID: ${id}?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/students/${id}`, { method: 'DELETE' });
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.detail);
+
+                alert(data.message);
+                fetchStudents();
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+
+        // Setup form for editing
+        function editStudent(student) {
+            formTitle.textContent = "Edit Student Profile";
+            submitBtn.textContent = "Update Student";
+            submitBtn.className = "w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700 transition";
+            cancelBtn.classList.remove('hidden');
+            isEditField.value = "true";
+
+            // Populate form fields
+            idField.value = student.student_id;
+            idField.disabled = true; // Backend relies on path ID parameter; standard constraint
+            document.getElementById('student_name').value = student.student_name;
+            document.getElementById('student_age').value = student.student_age;
+            document.getElementById('course').value = student.course;
+            document.getElementById('marks').value = student.marks;
+            document.getElementById('contact').value = student.contact;
+            document.getElementById('city').value = student.city || '';
+        }
+
+        // Cancel editing mode
+        cancelBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            studentForm.reset();
+            formTitle.textContent = "Add New Student";
+            submitBtn.textContent = "Save Student";
+            submitBtn.className = "w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition";
+            cancelBtn.classList.add('hidden');
+            isEditField.value = "false";
+            idField.disabled = false;
+        }
+
+        // Filter / Search Logic
+        document.getElementById('search-btn').addEventListener('click', async () => {
+            const course = document.getElementById('search-course').value;
+            const city = document.getElementById('search-city').value;
+
+            let queryParams = [];
+            if (course) queryParams.push(`course=${encodeURIComponent(course)}`);
+            if (city) queryParams.push(`city=${encodeURIComponent(city)}`);
+
+            const url = `${API_URL}/search${queryParams.length ? '?' + queryParams.join('&') : ''}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                renderTable(data.results);
+            } catch (error) {
+                alert("Search failed.");
+            }
+        });
+
+        // Reset Search filter
+        document.getElementById('reset-search-btn').addEventListener('click', () => {
+            document.getElementById('search-course').value = '';
+            document.getElementById('search-city').value = '';
+            fetchStudents();
+        });
+    </script>
+</body>
+
+</html>
